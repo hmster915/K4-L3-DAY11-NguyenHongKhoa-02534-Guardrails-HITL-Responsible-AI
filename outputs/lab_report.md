@@ -2,30 +2,30 @@
 
 > File này **tự sinh** bởi `scripts/grade.py`. **Không** viết / sửa tay.
 
-- Generated (UTC): `2026-09-28T15:28:49.855360+00:00`
-- Framework: `—`
-- Technical failure: **True**
+- Generated (UTC): `2026-09-28T15:47:36.982543+00:00`
+- Framework: `google-adk-plugins/openai-blue`
+- Technical failure: **False**
 
 ## Packaging
 
 | File | Status |
 |------|--------|
-| results.json | MISSING |
+| results.json | OK |
 | attack_results.json | OK |
-| audit_log.json | MISSING |
-| metrics.json | MISSING |
+| audit_log.json | OK |
+| metrics.json | OK |
 
 ## Schema (`results.json`)
 
-- Valid: **False**
-- Error: `missing outputs/results.json`
+- Valid: **True**
+- Error: `None`
 
 ## Defense snapshot (từ `results.json`)
 
-- Safe queries blocked: `None/None`
-- Attack queries blocked: `None/None`
-- Edge cases blocked: `None/None`
-- Rate limit blocked/sent: `None/None`
+- Safe queries blocked: `0/5`
+- Attack queries blocked: `7/7`
+- Edge cases blocked: `2/3`
+- Rate limit blocked/sent: `2/3`
 
 ## Red Team snapshot (từ `attack_results.json`)
 
@@ -39,8 +39,8 @@
 - Technical failure: `False`
 
 ```text
-......ssss                                                               [100%]
-6 passed, 4 skipped in 1.16s
+..........                                                               [100%]
+10 passed in 1.15s
 ```
 
 ## Notes

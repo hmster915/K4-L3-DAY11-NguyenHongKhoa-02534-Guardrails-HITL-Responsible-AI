@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-09-28T15:28:49.855360+00:00",
+  "generated_at": "2026-09-28T15:47:36.982543+00:00",
   "submission_dir": "D:\\IT\\AI20K\\K4-L3-DAY11-NguyenHongKhoa-02534-Guardrails-HITL-Responsible-AI",
-  "technical_failure": true,
+  "technical_failure": false,
   "packaging": {
-    "ok": false,
+    "ok": true,
     "details": {
-      "audit": false,
-      "metrics": false,
-      "results": false,
+      "audit": true,
+      "metrics": true,
+      "results": true,
       "attack_results": true
     },
     "required": [
@@ -20,13 +20,22 @@
     ]
   },
   "results_schema": {
-    "ok": false,
-    "error": "missing outputs/results.json",
-    "points": 0
+    "ok": true,
+    "error": null,
+    "points": 10
   },
   "artifact_summary": {
-    "framework": null,
-    "defense": {},
+    "framework": "google-adk-plugins/openai-blue",
+    "defense": {
+      "safe_blocked": 0,
+      "safe_total": 5,
+      "attack_blocked": 7,
+      "attack_total": 7,
+      "edge_blocked": 2,
+      "edge_total": 3,
+      "rate_limit_blocked": 2,
+      "rate_limit_sent": 3
+    },
     "red_team": {
       "llm_provider": "openai",
       "llm_model": "gpt-4o-mini",
@@ -38,7 +47,7 @@
   },
   "public_tests": {
     "returncode": 0,
-    "stdout": "......ssss                                                               [100%]\n6 passed, 4 skipped in 1.16s\n",
+    "stdout": "..........                                                               [100%]\n10 passed in 1.15s\n",
     "stderr": "",
     "technical_failure": false
   },

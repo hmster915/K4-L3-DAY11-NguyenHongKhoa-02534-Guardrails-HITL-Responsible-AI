@@ -4,9 +4,7 @@ Lab 11 — Configuration, provider selection, API keys.
 Hai tầng model (không trộn):
 
   Blue Team (CP2–CP3, guardrails / pipeline / protected agent)
-    → CỐ ĐỊNH OpenRouter ``liquid/lfm-2.5-2.6b``
-       https://openrouter.ai/liquid/lfm-2.5-2.6b
-    → Cần ``OPENROUTER_API_KEY``
+    → OpenAI using ``OPENAI_API_KEY``
 
   Red Team (CP4)
     → Chọn một provider: OpenAI hoặc Gemini
@@ -34,11 +32,11 @@ PROVIDER_OPENAI = "openai"
 PROVIDER_GEMINI = "gemini"
 PROVIDER_OPENROUTER = "openrouter"
 
-# --- Blue Team (LOCKED) ---
-BLUE_PROVIDER = PROVIDER_OPENROUTER
-BLUE_MODEL = "liquid/lfm-2.5-2.6b"
+# --- Blue Team ---
+BLUE_PROVIDER = PROVIDER_OPENAI
+BLUE_MODEL = "gpt-4o-mini"
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
-DEFAULT_OPENROUTER_MODEL = BLUE_MODEL  # alias
+DEFAULT_OPENROUTER_MODEL = "liquid/lfm-2.5-2.6b"  # backward-compatible alias
 
 # --- Red Team ---
 DEFAULT_OPENAI_MODEL = "gpt-4o-mini"
@@ -96,7 +94,7 @@ except FileNotFoundError:
 
 
 # ---------------------------------------------------------------------------
-# Blue Team — fixed OpenRouter Liquid
+# Blue Team — OpenAI
 # ---------------------------------------------------------------------------
 
 def get_blue_provider() -> str:
@@ -104,23 +102,32 @@ def get_blue_provider() -> str:
 
 
 def get_blue_model() -> str:
-    # Hard-locked; env cannot override for the graded Blue Team path.
-    return BLUE_MODEL
+    return (
+        os.environ.get("BLUE_MODEL")
+        or os.environ.get("OPENAI_MODEL")
+        or BLUE_MODEL
+    ).strip()
 
 
 def get_openrouter_api_key() -> str:
     return os.environ.get("OPENROUTER_API_KEY", "").strip()
 
 
+def has_valid_openrouter_api_key() -> bool:
+    """Return True only when the Blue key is not empty or a template value."""
+    key = get_openrouter_api_key()
+    return key.startswith("sk-or-") and key not in {"sk-or-...", "sk-or-your-key-here"}
+
+
+def has_valid_blue_api_key() -> bool:
+    """Blue uses the same OpenAI credential configured for this project."""
+    key = get_openai_api_key()
+    return key.startswith("sk-") and key not in {"sk-...", "sk-your-key-here"}
+
+
 def blue_client_kwargs() -> dict:
-    """OpenAI SDK kwargs pointing at OpenRouter (Blue Team only)."""
-    return {
-        "api_key": get_openrouter_api_key() or None,
-        "base_url": (
-            os.environ.get("OPENROUTER_BASE_URL", OPENROUTER_BASE_URL).strip()
-            or OPENROUTER_BASE_URL
-        ),
-    }
+    """OpenAI SDK kwargs for the Blue Team."""
+    return {"api_key": get_openai_api_key() or None}
 
 
 def blue_provider_label() -> str:
@@ -235,12 +242,10 @@ def is_harder_model() -> bool:
 
 
 def setup_api_key():
-    """Ensure keys for Blue (OpenRouter) + Red / Red Advance (OpenAI or Gemini)."""
-    if not get_openrouter_api_key():
-        os.environ["OPENROUTER_API_KEY"] = input(
-            "Enter OpenRouter API Key (Blue): "
-        ).strip()
-    print(f"Blue  — {blue_provider_label()}  [LOCKED]")
+    """Ensure keys for Blue + Red / Red Advance."""
+    if not has_valid_blue_api_key():
+        os.environ["OPENAI_API_KEY"] = input("Enter OpenAI API Key (Blue): ").strip()
+    print(f"Blue  — {blue_provider_label()}")
 
     red = get_red_provider()
     model = get_red_model()

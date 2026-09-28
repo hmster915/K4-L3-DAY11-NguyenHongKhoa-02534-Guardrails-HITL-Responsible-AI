@@ -79,6 +79,9 @@ async def part3_assignment_suite():
         )
         print(f"Detail: {e}")
         return None
+    except RuntimeError as e:
+        print(f"Checkpoint 3 cannot run: {e}")
+        return None
 
 
 async def part4_attacks():
